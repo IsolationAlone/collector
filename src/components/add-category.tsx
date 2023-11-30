@@ -14,16 +14,17 @@ import { Plus } from "lucide-react";
 import { AddCategoryForm } from "./form-category";
 
 export function AddCategory() {
+  const [model, setModel] = React.useState(false);
   return (
-    <Dialog>
+    <Dialog open={model} onOpenChange={setModel}>
       <DialogTrigger className="h-11 rounded-md px-3 border hover:bg-accent hover:text-accent-foreground transition-colors">
         <Plus />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you sure absolutely sure?</DialogTitle>
+          <DialogTitle>Add New Category</DialogTitle>
           <DialogDescription>
-            <AddCategoryForm />
+            <AddCategoryForm modelState={setModel} />
           </DialogDescription>
         </DialogHeader>
       </DialogContent>

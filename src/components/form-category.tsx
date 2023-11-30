@@ -6,7 +6,6 @@ import * as z from "zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -14,50 +13,94 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import addCategory from "@/action/addCategory";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+  name: z.string().min(2, {
+    message: "Name must be at least 2 characters.",
+  }),
+  coverImage: z.string().url({
+    message: "Not a URL",
   }),
 });
 
-export function AddCategoryForm() {
+export function AddCategoryForm({
+  modelState,
+}: {
+  modelState: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const queryClient = useQueryClient();
+
+  const { mutate: creatCategory, isPending } = useMutation({
+    mutationFn: async (newCategory) => {
+      const res = await fetch("/api/getCategory", {
+        method: "post",
+        headers: { "Content-Type": "application/josn" },
+        body: JSON.stringify(newCategory),
+      });
+      return await res.json();
+    },
+    onSuccess: (data) => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ["category"] });
+      console.log(data);
+      modelState(false);
+    },
+  });
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-    },
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    // await new Promise((res) => setTimeout(res, 3000));
+    //@ts-ignore
+    creatCategory(values);
   }
 
   return (
     <Form {...form}>
-      <form action={addCategory} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-3">
         <FormField
+          disabled={isPending}
           control={form.control}
-          name="username"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>Category's Name</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input placeholder="What to call this category ?" {...field} />
               </FormControl>
-              <FormDescription>
+              {/* <FormDescription>
                 This is your public display name.
-              </FormDescription>
+              </FormDescription> */}
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <FormField
+          disabled={isPending}
+          control={form.control}
+          name="coverImage"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Add Image</FormLabel>
+              <FormControl>
+                <Input placeholder="Random Image Link" {...field} />
+              </FormControl>
+              {/* <FormDescription>
+                This is your public display name.
+              </FormDescription> */}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button disabled={isPending} type="submit">
+          {isPending ? "Submitting..." : "Submit"}
+        </Button>
       </form>
     </Form>
   );

@@ -4,4 +4,5 @@ type Item = {
   coverImage: string;
   genres: string[];
   subCategory: string;
+  quotes?: string[];
 };

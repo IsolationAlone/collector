@@ -1,6 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
+import Link from "next/link";
 
 const ItemCard = ({ data }: { data: Item }) => {
   return (
@@ -26,10 +28,14 @@ const ItemCard = ({ data }: { data: Item }) => {
         <CardDescription>{data.subCategory}</CardDescription>
       </CardHeader>
       <CardContent>{/* <p>Card Content</p> */}</CardContent>
-      <CardFooter className="flex gap-3">
-        {data.genres.map((e) => (
-          <Badge variant="secondary">{e}</Badge>
-        ))}
+      <CardFooter className="flex justify-between gap-3">
+        <Badge variant="secondary">{data.genres[0]}</Badge>
+        <Link
+          href={`${data.subCategory}/${data.id}`}
+          className={buttonVariants({ variant: "link" })}
+        >
+          Add Quotes
+        </Link>
       </CardFooter>
     </Card>
   );

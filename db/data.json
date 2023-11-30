@@ -95,17 +95,17 @@
       "cover": "https://images.unsplash.com/photo-1600188768988-e2a8ddfe6f08?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=500&ixid=MnwxfDB8MXxyYW5kb218MHx8YXV0aG9yfHx8fHx8MTcwMDMzMTgzOQ&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1000"
     },
     {
-      "id": 4,
+      "id": 5,
       "name": "leaders",
       "cover": "https://images.unsplash.com/photo-1598565061654-9339be95a371?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=500&ixid=MnwxfDB8MXxyYW5kb218MHx8Z3JlZWt8fHx8fHwxNzAwMzMyMDU4&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1000"
     },
     {
-      "id": 5,
+      "id": 6,
       "name": "songs",
       "cover": "https://images.unsplash.com/photo-1604936809881-d8113b290d47?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=500&ixid=MnwxfDB8MXxyYW5kb218MHx8c29uZ3x8fHx8fDE3MDAzMzIwOTM&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1000"
     },
     {
-      "id": 6,
+      "id": 7,
       "name": "actors",
       "cover": "https://images.unsplash.com/photo-1604936809881-d8113b290d47?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=500&ixid=MnwxfDB8MXxyYW5kb218MHx8c29uZ3x8fHx8fDE3MDAzMzIwOTM&ixlib=rb-4.0.3&q=80&utm_campaign=api-credit&utm_medium=referral&utm_source=unsplash_source&w=1000"
     }
@@ -116,35 +116,95 @@
       "itemName": "Inception",
       "coverImage": "https://collider.com/wp-content/uploads/inception_movie_poster_banner_03.jpg",
       "genres": ["Sci-Fi", "Action", "Thriller"],
-      "subCategory": "movies"
+      "subCategory": "movies",
+      "quotes": [
+        "Dreams feel real while we're in them. It's only when we wake up that we realize something was actually strange.",
+        "An idea is like a virus, resilient, highly contagious. The smallest seed of an idea can grow. It can grow to define or destroy you.",
+        "You're waiting for a train. A train that'll take you far away. You know where you hope this train will take you, but you can't be sure.",
+        "The subconscious is motivated by emotion, right? Not reason. We need to find a way to translate this into an emotional concept.",
+        "What is the most resilient parasite? Bacteria? A virus? An intestinal worm? An idea. Resilient, highly contagious. Once an idea has taken hold in the brain, it's almost impossible to eradicate.",
+        "The only way to know you've been dreaming for 50 years is to come back and see that your kids have aged. And you have not.",
+        "You mustn't be afraid to dream a little bigger, darling.",
+        "Do you want to take a leap of faith, or become an old man filled with regret, waiting to die alone?",
+        "We build cathedrals without nails, we create entire worlds in our minds. We contain within us both the power to create and to destroy.",
+        "We create the world of a dream. We bring a subject into that dream, and they fill it with their secrets."
+      ]
     },
     {
       "id": 2,
       "itemName": "The Dark Knight",
       "coverImage": "https://www.clandestinecritic.co.uk/wp-content/uploads/2012/08/the-dark-knight-rises-poster-landscape.jpg",
       "genres": ["Action", "Crime", "Drama"],
-      "subCategory": "movies"
+      "subCategory": "movies",
+      "quotes": [
+        "Why so serious?",
+        "It's not who I am underneath, but what I do that defines me.",
+        "I believe whatever doesn't kill you simply makes you... stranger.",
+        "You either die a hero, or you live long enough to see yourself become the villain.",
+        "Some men just want to watch the world burn.",
+        "I'm like a dog chasing cars, I wouldn't know what to do if I caught one, you know, I just do... things.",
+        "A little fight in you. I like that.",
+        "Introduce a little anarchy. Upset the established order, and everything becomes chaos.",
+        "You have nothing, nothing to threaten me with. Nothing to do with all your strength.",
+        "This is what happens when an unstoppable force meets an immovable object."
+      ]
     },
     {
       "id": 3,
       "itemName": "Jurassic Park",
       "coverImage": "https://www.wallpaperup.com/uploads/wallpapers/2014/03/07/289292/9b8b948c035bd3757f5da3dd4ea11636.jpg",
       "genres": ["Adventure", "Sci-Fi", "Action"],
-      "subCategory": "movies"
+      "subCategory": "movies",
+      "quotes": [
+        "Welcome to Jurassic Park!",
+        "Life finds a way.",
+        "Clever girl.",
+        "Hold onto your butts.",
+        "They're moving in herds. They do move in herds.",
+        "Must go faster!",
+        "Objects in the mirror are closer than they appear.",
+        "We have a T-Rex.",
+        "Dinosaurs eat man. Woman inherits the earth.",
+        "The question is, how can you know anything about an extinct ecosystem? And therefore, how could you assume that you can control it?"
+      ]
     },
     {
       "id": 4,
       "itemName": "The Matrix",
       "coverImage": "https://assets-in.bmscdn.com/discovery-catalog/events/et00065557-uxvnecbehf-landscape.jpg",
       "genres": ["Action", "Sci-Fi"],
-      "subCategory": "movies"
+      "subCategory": "movies",
+      "quotes": [
+        "Welcome to the real world.",
+        "I know kung fu.",
+        "What is real? How do you define real?",
+        "There is no spoon.",
+        "Ignorance is bliss.",
+        "Free your mind.",
+        "Why, Mr. Anderson? Why, why, why? Why do you do it? Why, why get up? Why keep fighting?",
+        "The Matrix is everywhere. It's all around you.",
+        "I'm going to show them a world where anything is possible.",
+        "You take the blue pill, the story ends. You wake up in your bed and believe whatever you want to believe. You take the red pill, you stay in Wonderland, and I show you how deep the rabbit hole goes."
+      ]
     },
     {
       "id": 5,
       "itemName": "Avatar",
       "coverImage": "https://i0.wp.com/theroughcutpod.com/wp-content/uploads/2023/01/Avatar_Twitter.jpeg?fit=1200%2C628&ssl=1",
       "genres": ["Action", "Adventure", "Fantasy"],
-      "subCategory": "movies"
+      "subCategory": "movies",
+      "quotes": [
+        "I see you.",
+        "I'd like to talk to you about a fresh start on a new world. You'd be making a difference.",
+        "Everything is backwards now, like out there is the true world, and in here is the dream.",
+        "You have a strong heart. No fear. But stupid! Ignorant like a child!",
+        "This is our land!",
+        "They've sent us a message that they can take whatever they want. Well, we will send them a message. That this... this is our land!",
+        "You're not in Kansas anymore. You're on Pandora.",
+        "I became a Marine for the hardship. Told myself I can pass any test a man can pass.",
+        "We're not in Kansas anymore. We are on Pandora, ladies and gentlemen. Respect that fact every second of every day.",
+        "We will show the Sky People that they cannot take whatever they want! And that this... this is our land!"
+      ]
     }
   ]
 }

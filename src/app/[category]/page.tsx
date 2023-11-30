@@ -1,6 +1,6 @@
-import { Category } from "@/components/category-list";
 import { notFound } from "next/navigation";
 import ItemCard from "./ItemCard";
+import prisma from "@/lib/prismaClient";
 
 export const dynamicParams = true;
 
@@ -11,8 +11,8 @@ type PageProps = {
 };
 
 export async function generateStaticParams() {
-  const res = await fetch("http://localhost:4000/category");
-  const categories: Category[] = await res.json();
+  const categories = await prisma.category.findMany();
+  // const categories: Category[] = await res.json();
 
   return categories.map((category) => {
     category: category.name.toString();
@@ -21,8 +21,8 @@ export async function generateStaticParams() {
 
 const fetchItems = async (category: string): Promise<Item[]> => {
   const res = await fetch(`http://localhost:4000/${category}`, {
-    // next: { revalidate: 60 },
-    cache: "no-cache",
+    // cache: "no-cache",
+    next: { tags: ["items"] },
   });
   const items = await res.json();
   return items;

@@ -6,6 +6,9 @@ import Provider from "@/lib/authProvider";
 import Profile from "./Profile";
 import CategoryList from "@/components/category-list";
 import { Suspense } from "react";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Icons } from "@/components/Icons";
+import ReactQueryProvider from "@/lib/queryProider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,16 +32,22 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Provider>
-            <main>
-              <div className="flex items-center justify-between">
-                <h1>Collector.</h1>
-                <Profile />
-              </div>
-              <Suspense fallback={<p>Loading...</p>}>
+            <ReactQueryProvider>
+              <main>
+                <div className="flex items-center justify-between">
+                  <h1>Collector.</h1>
+                  <Profile />
+                </div>
+                {/* <Suspense
+                fallback={
+                  
+                }
+              > */}
                 <CategoryList />
-              </Suspense>
-              {children}
-            </main>
+                {/* </Suspense> */}
+                {children}
+              </main>
+            </ReactQueryProvider>
           </Provider>
         </ThemeProvider>
       </body>

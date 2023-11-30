@@ -3,5 +3,5 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="grid gap-3">{children}</div>;
+  return <div className="grid gap-3 py-5">{children}</div>;
 }
