@@ -6,6 +6,8 @@ import { Category, Item } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import ItemForm from "./ItemForm";
 import { cache } from "react";
+import { metadata } from "../layout";
+import { Metadata, ResolvingMetadata } from "next";
 
 export const dynamicParams = true;
 
@@ -29,6 +31,45 @@ export async function generateStaticParams() {
     if (!category) return;
     category: category.name.toString();
   });
+}
+
+type Props = {
+  params: { category: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata(
+  { params, searchParams }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  // read route params
+  // const id = params.id
+  let item = null;
+
+  // fetch data
+  try {
+    item = await prisma.category.findFirst({
+      where: {
+        name: params.category,
+      },
+      select: {
+        name: true,
+      },
+    });
+    if (!item) throw { error: "Not Found" };
+  } catch (error) {
+    if (error instanceof PrismaClientKnownRequestError)
+      item = {
+        name: "Not Found",
+      };
+  }
+
+  // optionally access and extend (rather than replace) parent metadata
+  // const previousImages = (await parent).openGraph?.images || [];
+
+  return {
+    title: item?.name,
+  };
 }
 
 const fetchItems = cache(
@@ -69,7 +110,7 @@ const Category = async ({ params: { category } }: PageProps) => {
       <ItemForm item={category} />
       {/* {data[0].title} */}
       {data.map((item) => (
-        <ItemCard key={item.id} data={item} />
+        <ItemCard key={item.id} data={item} category={category} />
       ))}
     </div>
   );

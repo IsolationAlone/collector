@@ -63,10 +63,6 @@ nav {
   @apply max-w-6xl mx-auto m-6 max-lg:px-5 px-3;
 }
 
-p {
-  @apply mb-2;
-}
-
 h1 {
   @apply scroll-m-20 text-4xl font-extrabold font-satoshi tracking-tight lg:text-5xl mb-4;
 }

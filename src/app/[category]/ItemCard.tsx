@@ -1,7 +1,7 @@
 "use client";
 
 import { DelCategory } from "@/components/delete-category";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -13,8 +13,15 @@ import {
 import { nova, space_mono } from "@/utils/fonts";
 import { Item } from "@prisma/client";
 import Image from "next/image";
+import Link from "next/link";
 
-const ItemCard = ({ data }: { data: Partial<Item> }) => {
+const ItemCard = ({
+  data,
+  category,
+}: {
+  data: Partial<Item>;
+  category: string;
+}) => {
   return (
     <Card className="overflow-hidden flex flex-col justify-between relative group md:min-h-[274px]">
       <Image
@@ -40,12 +47,15 @@ const ItemCard = ({ data }: { data: Partial<Item> }) => {
           <Trash2 />
         </Button> */}
         <DelCategory id={data.id!} itemName={data.title!} />
-        <Button
-          variant={"outline"}
-          className={`${space_mono.className} z-10 flex gap-2 text-muted-foreground font-bold`}
+        <Link
+          href={`/${category}/${data.id}`}
+          className={buttonVariants({
+            variant: "outline",
+            className: `${space_mono.className} z-10 flex gap-2 text-muted-foreground font-bold`,
+          })}
         >
           View
-        </Button>
+        </Link>
 
         {/* <Badge variant="secondary">{data.genres[0]}</Badge> */}
         {/* <Link

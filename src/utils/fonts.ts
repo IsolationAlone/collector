@@ -1,4 +1,4 @@
-import { Inter, Space_Mono, Nova_Square } from "next/font/google";
+import { Inter, Space_Mono, Nova_Square, Vina_Sans } from "next/font/google";
 
 export const inter = Inter({
   subsets: ["latin"],
@@ -14,5 +14,11 @@ export const space_mono = Space_Mono({
 export const nova = Nova_Square({
   subsets: ["latin"],
   display: "auto",
+  weight: ["400"],
+});
+
+export const vina = Vina_Sans({
+  subsets: ["latin"],
+  display: "swap",
   weight: ["400"],
 });

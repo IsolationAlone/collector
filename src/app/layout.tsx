@@ -10,6 +10,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Icons } from "@/components/Icons";
 import ReactQueryProvider from "@/lib/queryProider";
 import { Toaster } from "@/components/ui/toaster";
+import { vina } from "@/utils/fonts";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,7 +37,7 @@ export default function RootLayout({
             <ReactQueryProvider>
               <main>
                 <div className="flex items-center justify-between">
-                  <h1>Collector.</h1>
+                  <h1 className={`${vina.className} text-5xl`}>Collector.</h1>
                   <Profile />
                 </div>
                 {/* <Suspense

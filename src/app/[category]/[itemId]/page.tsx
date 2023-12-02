@@ -1,46 +1,102 @@
 import { notFound } from "next/navigation";
-import React from "react";
+import React, { cache } from "react";
 import ItemDisplay from "./ItemDisplay";
+import { Item } from "@prisma/client";
+import prisma from "@/lib/prismaClient";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import ItemDetails from "./ItemDetails";
 
 type PageProps = {
   params: {
     category: string;
-    itemId: number;
+    itemId: string;
   };
 };
 
-const fetchItems = async (category: string): Promise<Item[]> => {
-  const res = await fetch(`http://localhost:4000/${category}`, {
-    next: { tags: ["category"], revalidate: 60 },
-    // cache: "no-cache",
-  });
-  const items = await res.json();
-  return items;
+const fetchItem = cache(
+  async (
+    itemId: string,
+    category: string
+  ): Promise<Item | PrismaClientKnownRequestError | undefined> => {
+    try {
+      const item = await prisma.item.findFirst({
+        where: {
+          id: itemId,
+          Category: {
+            name: category,
+          },
+        },
+        include: {
+          Category: true,
+        },
+      });
+      if (!item) throw { error: "Not found" };
+      return item;
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) return error;
+    }
+  }
+);
+
+import { Metadata, ResolvingMetadata } from "next";
+
+type Props = {
+  params: { category: string; itemId: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 };
 
+export async function generateMetadata(
+  { params, searchParams }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  // read route params
+  // const id = params.id
+  let item = null;
+
+  // fetch data
+  try {
+    item = await prisma.item.findUnique({
+      where: {
+        id: params.itemId,
+      },
+      select: {
+        title: true,
+      },
+    });
+    if (!item) throw { error: "Not Found" };
+  } catch (error) {
+    if (error instanceof PrismaClientKnownRequestError)
+      item = {
+        title: "Not Found",
+      };
+  }
+
+  // optionally access and extend (rather than replace) parent metadata
+  // const previousImages = (await parent).openGraph?.images || [];
+
+  return {
+    title: item?.title,
+  };
+}
+
 const Items = async ({ params: { category, itemId } }: PageProps) => {
-  const categoryArray = await fetchItems(category);
-  const item = categoryArray[itemId - 1];
+  const item = await fetchItem(itemId, category);
 
   if (!item) return notFound();
 
+  if (item instanceof PrismaClientKnownRequestError) return notFound();
+
   return (
-    <div className="flex gap-5">
+    <div className="flex max-md:flex-col gap-5">
       <ItemDisplay
         coverImage={item.coverImage}
-        itemName={item.itemName}
-        subCategory={item.subCategory}
+        title={item.title}
+        createdAt={item.createdAt}
+        updatedAt={item.updatedAt}
+        //@ts-ignore
+        subCategory={item.Category.name}
       />
-      <div className="grid gap-3">
-        <h2 className="text-muted-foreground font-satoshi text-5xl font-extrabold">
-          Quotes
-        </h2>
-        {item.quotes?.map((quote) => (
-          <span key={quote} className="border p-3">
-            {quote}
-          </span>
-        ))}
-      </div>
+      <ItemDetails />
     </div>
   );
 };
