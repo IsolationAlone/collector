@@ -1,4 +1,4 @@
-import { connectToDB } from "@/utils/database";
+// import { connectToDB } from "@/utils/database";
 import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
 

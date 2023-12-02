@@ -14,6 +14,7 @@ import {
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "./ui/use-toast";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -46,6 +47,13 @@ export function AddCategoryForm({
       console.log(data);
       modelState(false);
     },
+    onError: (error) => {
+      console.log(error);
+      toast({
+        title: "Database Error",
+        variant: "destructive",
+      });
+    },
   });
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -58,7 +66,10 @@ export function AddCategoryForm({
     // ✅ This will be type-safe and validated.
     // await new Promise((res) => setTimeout(res, 3000));
     //@ts-ignore
-    creatCategory(values);
+    creatCategory({
+      name: values.name.toLowerCase(),
+      coverImage: values.coverImage,
+    });
   }
 
   return (
@@ -72,7 +83,11 @@ export function AddCategoryForm({
             <FormItem>
               <FormLabel>Category's Name</FormLabel>
               <FormControl>
-                <Input placeholder="What to call this category ?" {...field} />
+                <Input
+                  className="placeholder:text-muted"
+                  placeholder="What to call this category ?"
+                  {...field}
+                />
               </FormControl>
               {/* <FormDescription>
                 This is your public display name.
@@ -89,7 +104,11 @@ export function AddCategoryForm({
             <FormItem>
               <FormLabel>Add Image</FormLabel>
               <FormControl>
-                <Input placeholder="Random Image Link" {...field} />
+                <Input
+                  className="placeholder:text-muted"
+                  placeholder="Random Image Link"
+                  {...field}
+                />
               </FormControl>
               {/* <FormDescription>
                 This is your public display name.

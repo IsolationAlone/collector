@@ -9,6 +9,7 @@ import { Suspense } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Icons } from "@/components/Icons";
 import ReactQueryProvider from "@/lib/queryProider";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -47,6 +48,7 @@ export default function RootLayout({
                 {/* </Suspense> */}
                 {children}
               </main>
+              <Toaster />
             </ReactQueryProvider>
           </Provider>
         </ThemeProvider>

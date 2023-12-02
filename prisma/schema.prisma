@@ -12,7 +12,7 @@ datasource db {
 
 model Category {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
+  name       String   @unique
   coverImage String
   items      Item[]
   createdAt  DateTime @default(now())
@@ -21,7 +21,11 @@ model Category {
 
 model Item {
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  catrgory   String
+  title      String
+  coverImage String
+  quotes     String[]
   Category   Category? @relation(fields: [categoryId], references: [id])
   categoryId String?   @db.ObjectId
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }

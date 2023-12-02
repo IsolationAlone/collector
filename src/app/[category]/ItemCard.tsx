@@ -1,7 +1,7 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { DelCategory } from "@/components/delete-category";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,32 +10,50 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { nova, space_mono } from "@/utils/fonts";
+import { Item } from "@prisma/client";
 import Image from "next/image";
-import Link from "next/link";
 
-const ItemCard = ({ data }: { data: Item }) => {
+const ItemCard = ({ data }: { data: Partial<Item> }) => {
   return (
-    <Card className="overflow-hidden">
-      <CardHeader className="relative ">
-        <Image
-          src={data.coverImage}
-          loader={() => data.coverImage}
-          alt={data.itemName}
-          fill
-          className="absolute object-cover opacity-20"
-        />
-        <CardTitle className="z-10">{data.itemName}</CardTitle>
-        <CardDescription>{data.subCategory}</CardDescription>
+    <Card className="overflow-hidden flex flex-col justify-between relative group md:min-h-[274px]">
+      <Image
+        src={data.coverImage!}
+        loader={() => data.coverImage!}
+        alt={data.title!}
+        fill
+        className="absolute object-cover opacity-20 group-hover:scale-110 hover:opacity-30 transition-all"
+      />
+      <CardHeader className="">
+        <CardTitle className={`${nova.className} capitalize line-clamp-2 z-10`}>
+          {data.title}
+        </CardTitle>
+        <CardDescription
+          className={`${space_mono.className} font-bold opacity-40 capitalize`}
+        >
+          {data.createdAt?.toDateString()}
+        </CardDescription>
       </CardHeader>
       <CardContent>{/* <p>Card Content</p> */}</CardContent>
       <CardFooter className="flex justify-between gap-3">
-        <Badge variant="secondary">{data.genres[0]}</Badge>
-        <Link
+        {/* <Button onClick={() => {}} variant={"ghost"} className="z-10">
+          <Trash2 />
+        </Button> */}
+        <DelCategory id={data.id!} itemName={data.title!} />
+        <Button
+          variant={"outline"}
+          className={`${space_mono.className} z-10 flex gap-2 text-muted-foreground font-bold`}
+        >
+          View
+        </Button>
+
+        {/* <Badge variant="secondary">{data.genres[0]}</Badge> */}
+        {/* <Link
           href={`${data.subCategory}/${data.id}`}
           className={buttonVariants({ variant: "link" })}
         >
           Add Quotes
-        </Link>
+        </Link> */}
       </CardFooter>
     </Card>
   );

@@ -2,18 +2,17 @@ import prisma from "@/lib/prismaClient";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const result = await prisma.movie.findMany();
+  const result = await prisma.item.findMany();
   return NextResponse.json(result);
 }
 
 export async function POST(req: Request) {
   try {
-    const { title, imageUrl, year } = await req.json();
-    const post = await prisma.movie.create({
+    const { title, coverImage } = await req.json();
+    const post = await prisma.item.create({
       data: {
         title,
-        year,
-        imageUrl,
+        coverImage,
       },
     });
     return NextResponse.json(post, { status: 201 });

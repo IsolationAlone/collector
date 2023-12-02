@@ -14,6 +14,7 @@ import { Icons } from "@/components/Icons";
 import { Button } from "@/components/ui/button";
 import { BuiltInProviderType } from "next-auth/providers/index";
 import { ModeToggle } from "@/components/mode-toogle";
+import { space_mono } from "@/utils/fonts";
 
 const Profile = () => {
   const { data: session, status } = useSession();
@@ -50,7 +51,7 @@ const Profile = () => {
             : signOut
         }
         disabled={status == "loading"}
-        className="border"
+        className={`${space_mono.className} border`}
         variant={"ghost"}
       >
         {status == "loading" && (

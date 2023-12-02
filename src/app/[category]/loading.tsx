@@ -15,7 +15,7 @@ const Loading = () => {
       {Array(6)
         .fill(Math.random() * 100)
         .map((num) => (
-          <Card className="overflow-hidden">
+          <Card className="overflow-hidden md:min-h-[274px]">
             <CardHeader className="relative ">
               <div className="absolute object-cover opacity-20" />
               <CardTitle className="z-10">
