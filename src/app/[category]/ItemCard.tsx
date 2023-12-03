@@ -29,7 +29,7 @@ const ItemCard = ({
         loader={() => data.coverImage!}
         alt={data.title!}
         fill
-        className="absolute object-cover opacity-20 group-hover:scale-110 hover:opacity-30 transition-all"
+        className="absolute object-cover dark:opacity-20 group-hover:scale-110 hover:opacity-30 transition-all"
       />
       <CardHeader className="">
         <CardTitle className={`${nova.className} capitalize line-clamp-2 z-10`}>

@@ -4,10 +4,12 @@ import { nova, space_mono } from "@/utils/fonts";
 import { Item } from "@prisma/client";
 import Image from "next/image";
 import React from "react";
+import { UpdateItemModel } from "./UpdateItemModel";
 
 const ItemDisplay = ({
   title,
   coverImage,
+  id,
   // @ts-ignore
   subCategory,
   createdAt,
@@ -16,9 +18,12 @@ const ItemDisplay = ({
   return (
     <div className="grid gap-2 h-fit min-w-[300px]">
       <span className="grid">
-        <h3 className={`${nova.className} capitalize text-3xl md:text-4xl`}>
-          {title}
-        </h3>
+        <section className="flex justify-between">
+          <h3 className={`${nova.className} capitalize text-3xl md:text-4xl`}>
+            {title}
+          </h3>
+          <UpdateItemModel id={id} title={title} coverImage={coverImage} />
+        </section>
         <span className={`${space_mono.className} flex gap-2`}>
           Created
           <p className="text-muted-foreground">{createdAt.toLocaleString()}</p>
@@ -34,7 +39,7 @@ const ItemDisplay = ({
           loader={() => coverImage}
           src={coverImage}
           fill
-          className="object-cover opacity-40"
+          className="object-cover dark:opacity-40"
         />
       </div>
       {/* <span className="text-secondary lowercase font-extrabold text-3xl">

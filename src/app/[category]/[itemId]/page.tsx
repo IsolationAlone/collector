@@ -89,6 +89,7 @@ const Items = async ({ params: { category, itemId } }: PageProps) => {
   return (
     <div className="flex max-md:flex-col gap-5">
       <ItemDisplay
+        id={itemId}
         coverImage={item.coverImage}
         title={item.title}
         createdAt={item.createdAt}
@@ -96,7 +97,12 @@ const Items = async ({ params: { category, itemId } }: PageProps) => {
         //@ts-ignore
         subCategory={item.Category.name}
       />
-      <ItemDetails />
+      <ItemDetails
+        id={item.id}
+        quote={item.quotes}
+        // @ts-ignore
+        category={item.Category.name}
+      />
     </div>
   );
 };

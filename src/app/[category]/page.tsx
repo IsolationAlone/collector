@@ -1,12 +1,10 @@
 import { notFound } from "next/navigation";
 import ItemCard from "./ItemCard";
 import prisma from "@/lib/prismaClient";
-import { GET } from "../api/getCategory/route";
 import { Category, Item } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import ItemForm from "./ItemForm";
 import { cache } from "react";
-import { metadata } from "../layout";
 import { Metadata, ResolvingMetadata } from "next";
 
 export const dynamicParams = true;
