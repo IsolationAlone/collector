@@ -11,31 +11,20 @@ import updateItem from "@/action/updateItem";
 type Props = {
   modelState: React.Dispatch<React.SetStateAction<boolean>>;
   title: string;
-  coverImage: string;
-  itemId: string;
 };
 
 const formSchema = z.object({
   title: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  coverImage: z.string().url({
-    message: "Not a URL",
-  }),
 });
 
-export function UpdateItemForm({
-  itemId,
-  modelState,
-  title,
-  coverImage,
-}: Props) {
+export function EditCategoryForm({ modelState, title }: Props) {
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title,
-      coverImage,
     },
   });
 
@@ -44,13 +33,11 @@ export function UpdateItemForm({
     // console.log(values);
     const data = {
       title: values.title,
-      coverImage: values.coverImage,
-      itemId,
     };
     // console.log(data);
 
     // await new Promise((res) => setTimeout(res, 2000));
-    await updateItem(data);
+    // await updateItem(data);
     modelState(false);
   }
 
@@ -65,24 +52,7 @@ export function UpdateItemForm({
             <FormItem>
               {/* <FormLabel>Category's Name</FormLabel> */}
               <FormControl>
-                <Input placeholder="Item's Name" {...field} />
-              </FormControl>
-              {/* <FormDescription>
-                This is your public display name.
-              </FormDescription> */}
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          disabled={form.formState.isSubmitting}
-          control={form.control}
-          name="coverImage"
-          render={({ field }) => (
-            <FormItem>
-              {/* <FormLabel>Add Image</FormLabel> */}
-              <FormControl>
-                <Input placeholder="Image Link related to Item" {...field} />
+                <Input placeholder="Category's Name" {...field} />
               </FormControl>
               {/* <FormDescription>
                 This is your public display name.

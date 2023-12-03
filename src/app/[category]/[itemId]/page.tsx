@@ -39,6 +39,7 @@ const fetchItem = cache(
 );
 
 import { Metadata, ResolvingMetadata } from "next";
+import ItemComponent from "./ItemComponent";
 
 type Props = {
   params: { category: string; itemId: string };
@@ -86,25 +87,7 @@ const Items = async ({ params: { category, itemId } }: PageProps) => {
 
   if (item instanceof PrismaClientKnownRequestError) return notFound();
 
-  return (
-    <div className="flex max-md:flex-col gap-5">
-      <ItemDisplay
-        id={itemId}
-        coverImage={item.coverImage}
-        title={item.title}
-        createdAt={item.createdAt}
-        updatedAt={item.updatedAt}
-        //@ts-ignore
-        subCategory={item.Category.name}
-      />
-      <ItemDetails
-        id={item.id}
-        quote={item.quotes}
-        // @ts-ignore
-        category={item.Category.name}
-      />
-    </div>
-  );
+  return <ItemComponent item={item} />;
 };
 
 export default Items;

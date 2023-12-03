@@ -4,7 +4,6 @@ import * as React from "react";
 
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -44,7 +43,7 @@ export function DelCategory({
 
   return (
     <AlertDialog open={model} onOpenChange={setModel}>
-      <AlertDialogTrigger className="h-11 rounded-md px-3 border hover:bg-accent hover:text-accent-foreground transition-colors z-10">
+      <AlertDialogTrigger className="h-11 rounded-md px-3 border hover:bg-destructive hover:text-accent-foreground transition-colors z-10">
         <Trash2 />
       </AlertDialogTrigger>
       <AlertDialogContent>
