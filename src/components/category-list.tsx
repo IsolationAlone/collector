@@ -36,7 +36,6 @@ const CategoryList = () => {
     return (
       <Button variant={"outline"} size={"lg"} className="px-4" disabled>
         <Icons.spinner className="animate-spin h-4 w-4" />
-        {fetchStatus}
       </Button>
     );
 
@@ -50,7 +49,6 @@ const CategoryList = () => {
       >
         <Lock className="h-4 w-4" />
         Need to be Authenticated
-        {fetchStatus}
       </Button>
     );
 
@@ -61,7 +59,6 @@ const CategoryList = () => {
           {isLoading ? (
             <Button variant={"outline"} size={"lg"} className="px-4" disabled>
               <Icons.spinner className="animate-spin h-4 w-4" />
-              {fetchStatus}
             </Button>
           ) : (
             <>
@@ -92,7 +89,6 @@ const CategoryList = () => {
                 </Link>
               ))}
               <AddCategory />
-              {fetchStatus}
             </>
           )}
         </div>
