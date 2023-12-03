@@ -14,7 +14,7 @@ import { nova, space_mono } from "@/utils/fonts";
 import { EditCategoryForm } from "@/components/edit-category";
 import { Category } from "@prisma/client";
 
-const EditForm = ({ id, name: title, coverImage }: Partial<Category>) => {
+const EditForm = ({ name: title }: Partial<Category>) => {
   const [model, setModel] = React.useState(false);
   return (
     <Dialog open={model} onOpenChange={setModel}>
@@ -29,12 +29,7 @@ const EditForm = ({ id, name: title, coverImage }: Partial<Category>) => {
           <DialogDescription
             className={`${space_mono.className} font-bold text-muted-foreground`}
           >
-            <EditCategoryForm
-              id={id!}
-              title={title!}
-              coverImage={coverImage!}
-              modelState={setModel}
-            />
+            <EditCategoryForm title={title!} modelState={setModel} />
           </DialogDescription>
         </DialogHeader>
       </DialogContent>
