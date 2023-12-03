@@ -81,7 +81,7 @@ export function AddCategoryForm({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Category's Name</FormLabel>
+              <FormLabel>Category&apos;s Name</FormLabel>
               <FormControl>
                 <Input
                   className="placeholder:text-muted"
