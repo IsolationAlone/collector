@@ -1,4 +1,3 @@
-// import { connectToDB } from "@/utils/database";
 import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
 
@@ -19,27 +18,31 @@ const handler = NextAuth({
 
       return session;
     },
-    // async signIn({ profile }) {
-    //   try {
-    //     await connectToDB();
+    async signIn({ profile }) {
+      try {
+        if (!profile?.email) throw { status: 404 };
+        if (!process.env.AUTH_USERS?.includes(profile.email))
+          throw { message: "Unknown Account", status: 404 };
+        // await connectToDB();
 
-    //     const userExists = await User.findOne({
-    //       email: profile.email,
-    //     });
+        // const userExists = await User.findOne({
+        //   email: profile.email,
+        // });
 
-    //     if (!userExists) {
-    //       await User.create({
-    //         email: profile.email,
-    //         username: profile.name.replace(" ", "").toLowerCase(),
-    //         image: profile.picture,
-    //       });
-    //     }
+        // if (!userExists) {
+        //   await User.create({
+        //     email: profile.email,
+        //     username: profile.name.replace(" ", "").toLowerCase(),
+        //     image: profile.picture,
+        //   });
+        // }
 
-    //     return true;
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
-    // },
+        return true;
+      } catch (err) {
+        // console.log(err);
+        return false;
+      }
+    },
   },
 });
 
