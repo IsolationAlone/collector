@@ -39,7 +39,6 @@ const ItemCard = ({
           className={`${space_mono.className} font-bold opacity-40 capitalize`}
         >
           {data.createdAt?.toDateString()}
-          {data?.itemLength}
         </CardDescription>
       </CardHeader>
       <CardContent>{/* <p>Card Content</p> */}</CardContent>
