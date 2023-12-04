@@ -110,11 +110,8 @@ const ItemDetails = ({
                 if (e.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
                   return e;
               })
-              .toReversed()
               .map((e, i) => <Item key={i} index={i} quote={e} />)
-          : quote
-              .toReversed()
-              .map((e, i) => <Item key={i} index={i} quote={e} />)}
+          : quote.map((e, i) => <Item key={i} index={i} quote={e} />)}
       </div>
     </div>
   );

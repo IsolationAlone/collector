@@ -106,8 +106,7 @@ const Category = async ({ params: { category } }: PageProps) => {
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
       <ItemForm item={category} />
-      {/* {data[0].title} */}
-      {data.toReversed().map((item) => (
+      {data.map((item) => (
         <ItemCard key={item.id} data={item} category={category} />
       ))}
     </div>
