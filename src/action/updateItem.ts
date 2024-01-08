@@ -16,6 +16,7 @@ async function updateItem(formData: any) {
   });
 
   revalidatePath("/[category]/[itemId]", "page");
+  revalidatePath("/[category]", "page");
 }
 
 export default updateItem;

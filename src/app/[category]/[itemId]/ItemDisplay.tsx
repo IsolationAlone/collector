@@ -10,11 +10,14 @@ import { useToast } from "@/components/ui/use-toast";
 import update from "@/action/update";
 import { Save } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import _ from "underscore";
 
 const ItemDisplay = ({
   id,
   title,
   coverImage,
+  // @ts-ignore
+  seo,
   quotes,
   // @ts-ignore
   subCategory,
@@ -48,7 +51,15 @@ const ItemDisplay = ({
               variant={"outline"}
               onClick={updateArray}
               disabled={
-                quotes.toString() === fetchedData.toString() || updating
+                (_.isEqual(seo, {
+                  title: "",
+                  description: "",
+                  permalink: "",
+                  image: "",
+                  coverImage: "",
+                }) &&
+                  quotes.toString() === fetchedData.toString()) ||
+                updating
               }
               className={`h-11 px-3 border hover:bg-accent hover:text-accent-foreground transition-colors rounded-full ${
                 updating && "border-orange-500"

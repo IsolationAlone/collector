@@ -19,7 +19,7 @@ async function update(formData: any) {
   });
 
   revalidatePath("/[category]/[itemId]", "page");
-  redirect(`/${category}`);
+  redirect(`/[category]`);
 }
 
 export default update;
