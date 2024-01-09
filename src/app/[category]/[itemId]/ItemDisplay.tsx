@@ -18,6 +18,8 @@ const ItemDisplay = ({
   coverImage,
   // @ts-ignore
   seo,
+  // @ts-ignore
+  fetchedSeo,
   quotes,
   // @ts-ignore
   subCategory,
@@ -32,7 +34,7 @@ const ItemDisplay = ({
   // Update
   async function updateArray() {
     setUpdating(true);
-    await update({ itemId: id, quotes, category: subCategory });
+    await update({ itemId: id, quotes, category: subCategory, seo });
     toast({
       title: "Updated Item",
     });
@@ -51,13 +53,7 @@ const ItemDisplay = ({
               variant={"outline"}
               onClick={updateArray}
               disabled={
-                (_.isEqual(seo, {
-                  title: "",
-                  description: "",
-                  permalink: "",
-                  image: "",
-                  coverImage: "",
-                }) &&
+                (_.isEqual(seo, fetchedSeo) &&
                   quotes.toString() === fetchedData.toString()) ||
                 updating
               }

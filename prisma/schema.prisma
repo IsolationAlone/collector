@@ -28,4 +28,13 @@ model Item {
   categoryId String?   @db.ObjectId
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
+  seo        Seo?
+}
+
+type Seo {
+  title       String @default("")
+  description String @default("")
+  permalink   String @default("")
+  image       String @default("")
+  coverImage  String @default("")
 }

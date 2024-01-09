@@ -8,11 +8,11 @@ import { Item } from "@prisma/client";
 const ItemComponent = ({ item }: { item: Item }) => {
   const [arr, setArr] = useState(item.quotes);
   const [seo, setSeo] = useState<SEO>({
-    title: "",
-    description: "",
-    permalink: "",
-    image: "",
-    coverImage: "",
+    title: item.seo?.title || "",
+    description: item.seo?.description || "",
+    permalink: item.seo?.permalink || "",
+    image: item.seo?.image || "",
+    coverImage: item.seo?.coverImage || "",
   });
 
   return (
@@ -25,6 +25,8 @@ const ItemComponent = ({ item }: { item: Item }) => {
         updatedAt={item.updatedAt}
         //@ts-ignore
         seo={seo}
+        //@ts-ignore
+        fetchedSeo={item?.seo}
         //@ts-ignore
         fetchedData={item.quotes}
         //@ts-ignore

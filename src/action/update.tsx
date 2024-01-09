@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 async function update(formData: any) {
-  const { itemId, quotes, category } = formData;
+  const { itemId, quotes, category, seo } = formData;
   await prisma.item.update({
     where: {
       id: itemId,
@@ -15,11 +15,12 @@ async function update(formData: any) {
     },
     data: {
       quotes,
+      seo,
     },
   });
 
   revalidatePath("/[category]/[itemId]", "page");
-  redirect(`/[category]`);
+  redirect(`/${category}`);
 }
 
 export default update;
