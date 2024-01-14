@@ -23,7 +23,7 @@ model Item {
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
   title      String
   coverImage String
-  quotes     String[]
+  quotes     Quotes[]
   Category   Category? @relation(fields: [categoryId], references: [id])
   categoryId String?   @db.ObjectId
   createdAt  DateTime  @default(now())
@@ -37,4 +37,9 @@ type Seo {
   permalink   String @default("")
   image       String @default("")
   coverImage  String @default("")
+}
+
+type Quotes {
+  quoteImage String @default("")
+  quote      String @default("")
 }

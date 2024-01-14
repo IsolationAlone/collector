@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { space_mono } from "@/utils/fonts";
+import { Quotes } from "@prisma/client";
 import { Copy, Trash2 } from "lucide-react";
 import React, { useState } from "react";
 
@@ -19,10 +20,10 @@ const ItemDetails = ({
   category,
 }: {
   id: string;
-  quote: string[];
+  quote: Quotes[];
   seo: SEO;
-  fetchData: string[];
-  setQuote: React.Dispatch<React.SetStateAction<string[]>>;
+  fetchData: Quotes[];
+  setQuote: React.Dispatch<React.SetStateAction<Quotes[]>>;
   setSeo: React.Dispatch<React.SetStateAction<SEO>>;
   category: string;
 }) => {
@@ -31,7 +32,7 @@ const ItemDetails = ({
   let images = [];
 
   const deleteElement = (element: string) => {
-    const index = quote.findIndex((ele) => ele == element);
+    const index = quote.findIndex((ele) => ele.quote == element);
     setQuote(quote.filter((o, i) => i !== index));
   };
 
@@ -133,7 +134,13 @@ const ItemDetails = ({
         /> */}
             <Button
               onClick={() => {
-                setQuote([...quote, ...text.split("+")]);
+                setQuote([
+                  ...quote,
+                  ...text.split("+").map((e) => ({
+                    quoteImage: "",
+                    quote: e,
+                  })),
+                ]);
                 setText("");
               }}
               className="px-6 uppercase"
@@ -155,7 +162,7 @@ const ItemDetails = ({
                 {search
                   ? quote.filter((e, i) => {
                       if (
-                        e
+                        e.quote
                           .toLocaleLowerCase()
                           .includes(search.toLocaleLowerCase())
                       )
@@ -166,7 +173,11 @@ const ItemDetails = ({
               </span>
             </section>
             <Button
-              onClick={() => navigator.clipboard.writeText(quote.join("\n"))}
+              onClick={() =>
+                navigator.clipboard.writeText(
+                  quote.map((e) => e.quote).join("\n")
+                )
+              }
               className="px-6"
             >
               <Copy />
@@ -178,12 +189,14 @@ const ItemDetails = ({
               ? quote
                   .filter((e, i) => {
                     if (
-                      e.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+                      e.quote
+                        .toLocaleLowerCase()
+                        .includes(search.toLocaleLowerCase())
                     )
                       return e;
                   })
-                  .map((e, i) => <Item key={i} index={i} quote={e} />)
-              : quote.map((e, i) => <Item key={i} index={i} quote={e} />)}
+                  .map((e, i) => <Item key={i} index={i} quote={e.quote} />)
+              : quote.map((e, i) => <Item key={i} index={i} quote={e.quote} />)}
           </div>
         </TabsContent>
       </Tabs>

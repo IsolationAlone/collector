@@ -34,6 +34,7 @@ const Dragndrop = () => {
         setUploadedFiles(data.resources);
       });
   }, []);
+
   return (
     <Dialog>
       <DialogTrigger className={buttonVariants({ variant: "outline" })}>
@@ -42,7 +43,7 @@ const Dragndrop = () => {
       <DialogContent className={space_mono.className}>
         <DialogHeader>
           <DialogTitle className={space_mono.className}>
-            Drag 'n' Drop
+            Drag &apos;n&apos; Drop
           </DialogTitle>
           <DialogDescription>
             Drag and drop files here or click to browse.
@@ -62,11 +63,11 @@ const Dragndrop = () => {
           />
         </div>
         <div className="flex gap-2">
-          {uploadedFiles.map((e) => {
+          {/* {uploadedFiles.map((e) => {
             return (
               <Image src={e.secure_url} alt="image" height={100} width={100} />
             );
-          })}
+          })} */}
         </div>
       </DialogContent>
     </Dialog>
