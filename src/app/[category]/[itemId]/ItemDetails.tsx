@@ -1,10 +1,12 @@
 "use client";
 
-import update from "@/action/update";
+import Dragndrop from "@/components/drag-n-drop";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import { space_mono } from "@/utils/fonts";
+import { Quotes } from "@prisma/client";
 import { Copy, Trash2 } from "lucide-react";
 import React, { useState } from "react";
 
@@ -12,20 +14,25 @@ const ItemDetails = ({
   id,
   quote,
   setQuote,
+  seo,
+  setSeo,
   fetchData,
   category,
 }: {
   id: string;
-  quote: string[];
-  fetchData: string[];
-  setQuote: React.Dispatch<React.SetStateAction<string[]>>;
+  quote: Quotes[];
+  seo: SEO;
+  fetchData: Quotes[];
+  setQuote: React.Dispatch<React.SetStateAction<Quotes[]>>;
+  setSeo: React.Dispatch<React.SetStateAction<SEO>>;
   category: string;
 }) => {
   const [search, setSearch] = useState("");
   const [text, setText] = useState<string>("");
+  let images = [];
 
   const deleteElement = (element: string) => {
-    const index = quote.findIndex((ele) => ele == element);
+    const index = quote.findIndex((ele) => ele.quote == element);
     setQuote(quote.filter((o, i) => i !== index));
   };
 
@@ -47,72 +54,152 @@ const ItemDetails = ({
   };
 
   return (
-    <div className={`${space_mono.className} w-full flex flex-col gap-3`}>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-        }}
-        className="flex w-full gap-2 items-center"
-      >
-        <Input
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Add Actors"
-        />
-        {/* <Textarea
+    <div className={`${space_mono.className} w-full `}>
+      <Tabs defaultValue="seo" className="w-full ">
+        <TabsList className="w-full">
+          <TabsTrigger
+            className="flex-1 text-lg py-1 font-semibold"
+            value="seo"
+          >
+            OnPage SEO
+          </TabsTrigger>
+          <TabsTrigger
+            className="flex-1 text-lg py-1 font-semibold"
+            value="content"
+          >
+            Content
+          </TabsTrigger>
+        </TabsList>
+
+        {/* SEO */}
+        <TabsContent className="flex flex-col gap-3 py-4" value="seo">
+          <Input
+            value={seo.title}
+            onChange={(e) => setSeo({ ...seo, title: e.target.value })}
+            placeholder="Add Title"
+          />
+          <Input
+            value={seo.permalink}
+            onChange={(e) => setSeo({ ...seo, permalink: e.target.value })}
+            placeholder="Add Permalink"
+          />
+          <Textarea
+            value={seo.description}
+            onChange={(e) => setSeo({ ...seo, description: e.target.value })}
+            placeholder="Add Meta Description"
+          />
+          {/* <Input
+            // value={text}
+            // onChange={(e) => setText(e.target.value)}
+            placeholder="Add Meta Description"
+          /> */}
+          {/* <Label>Image</Label> */}
+          <Input
+            type="text"
+            value={seo.image}
+            onChange={(e) => setSeo({ ...seo, image: e.target.value })}
+            placeholder="Add Image"
+          />
+          <Input
+            type="text"
+            value={seo.coverImage}
+            onChange={(e) => setSeo({ ...seo, coverImage: e.target.value })}
+            placeholder="Add Cover Title"
+          />
+
+          <Dragndrop />
+
+          <Button onClick={() => console.log(seo)}>See</Button>
+        </TabsContent>
+
+        {/* Content */}
+        <TabsContent className="flex flex-col gap-3" value="content">
+          {/* Add */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
+            className="flex w-full gap-2 items-center"
+          >
+            <Input
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="Add Actors"
+            />
+            {/* <Textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Add Actors"
           className="resize-none h-2"
         /> */}
-        <Button
-          onClick={() => {
-            setQuote([...quote, ...text.split("+")]);
-            setText("");
-          }}
-          className="px-6 uppercase"
-        >
-          Add
-        </Button>
-      </form>
-      <span className="flex justify-between">
-        <section className="flex md:items-center max-md:flex-col gap-2">
-          <Input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-max"
-            placeholder="Filter"
-          />
-          <span className="flex gap-1 text-muted-foreground">
-            [
-            {search
-              ? quote.filter((e, i) => {
-                  if (
-                    e.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-                  )
-                    return e;
-                }).length
-              : quote.length}
-            ]<p>Items</p>
+            <Button
+              onClick={() => {
+                setQuote([
+                  ...quote,
+                  ...text.split("+").map((e) => ({
+                    quoteImage: "",
+                    quote: e,
+                  })),
+                ]);
+                setText("");
+              }}
+              className="px-6 uppercase"
+            >
+              Add
+            </Button>
+          </form>
+          {/* Filter */}
+          <span className="flex justify-between">
+            <section className="flex md:items-center max-md:flex-col gap-2">
+              <Input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-max"
+                placeholder="Filter"
+              />
+              <span className="flex gap-1 text-muted-foreground">
+                [
+                {search
+                  ? quote.filter((e, i) => {
+                      if (
+                        e.quote
+                          .toLocaleLowerCase()
+                          .includes(search.toLocaleLowerCase())
+                      )
+                        return e;
+                    }).length
+                  : quote.length}
+                ]<p>Items</p>
+              </span>
+            </section>
+            <Button
+              onClick={() =>
+                navigator.clipboard.writeText(
+                  quote.map((e) => e.quote).join("\n")
+                )
+              }
+              className="px-6"
+            >
+              <Copy />
+            </Button>
           </span>
-        </section>
-        <Button
-          onClick={() => navigator.clipboard.writeText(quote.join("\n"))}
-          className="px-6"
-        >
-          <Copy />
-        </Button>
-      </span>
-      <div className="grid gap-2">
-        {search
-          ? quote
-              .filter((e, i) => {
-                if (e.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
-                  return e;
-              })
-              .map((e, i) => <Item key={i} index={i} quote={e} />)
-          : quote.map((e, i) => <Item key={i} index={i} quote={e} />)}
-      </div>
+          {/* Quotes */}
+          <div className="grid gap-2">
+            {search
+              ? quote
+                  .filter((e, i) => {
+                    if (
+                      e.quote
+                        .toLocaleLowerCase()
+                        .includes(search.toLocaleLowerCase())
+                    )
+                      return e;
+                  })
+                  .map((e, i) => <Item key={i} index={i} quote={e.quote} />)
+              : quote.map((e, i) => <Item key={i} index={i} quote={e.quote} />)}
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

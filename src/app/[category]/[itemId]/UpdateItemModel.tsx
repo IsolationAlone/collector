@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { PencilLine, Plus } from "lucide-react";
+import { PencilLine } from "lucide-react";
 import { nova, space_mono } from "@/utils/fonts";
 import { UpdateItemForm } from "@/components/form-updateItem";
 

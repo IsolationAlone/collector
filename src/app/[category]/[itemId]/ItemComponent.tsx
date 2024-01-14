@@ -7,6 +7,13 @@ import { Item } from "@prisma/client";
 
 const ItemComponent = ({ item }: { item: Item }) => {
   const [arr, setArr] = useState(item.quotes);
+  const [seo, setSeo] = useState<SEO>({
+    title: item.seo?.title || "",
+    description: item.seo?.description || "",
+    permalink: item.seo?.permalink || "",
+    image: item.seo?.image || "",
+    coverImage: item.seo?.coverImage || "",
+  });
 
   return (
     <div className="flex max-md:flex-col gap-5">
@@ -17,6 +24,10 @@ const ItemComponent = ({ item }: { item: Item }) => {
         createdAt={item.createdAt}
         updatedAt={item.updatedAt}
         //@ts-ignore
+        seo={seo}
+        //@ts-ignore
+        fetchedSeo={item?.seo}
+        //@ts-ignore
         fetchedData={item.quotes}
         //@ts-ignore
         subCategory={item.Category.name}
@@ -25,6 +36,8 @@ const ItemComponent = ({ item }: { item: Item }) => {
       <ItemDetails
         id={item.id}
         fetchData={item.quotes}
+        seo={seo}
+        setSeo={setSeo}
         quote={arr}
         setQuote={setArr}
         // @ts-ignore

@@ -1,18 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
 const prismaClientSingleton = () => {
-  return new PrismaClient().$extends({
-    result: {
-      item: {
-        itemLength: {
-          needs: { quotes: true },
-          compute(item) {
-            return item.quotes.length;
-          },
-        },
-      },
-    },
-  });
+  return new PrismaClient()
 };
 
 type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>;
