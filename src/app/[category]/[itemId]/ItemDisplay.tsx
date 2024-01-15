@@ -54,7 +54,7 @@ const ItemDisplay = ({
               onClick={updateArray}
               disabled={
                 (_.isEqual(seo, fetchedSeo) &&
-                  quotes.toString() === fetchedData.toString()) ||
+                  _.isEqual(quotes, fetchedData)) ||
                 updating
               }
               className={`h-11 px-3 border hover:bg-accent hover:text-accent-foreground transition-colors rounded-full ${

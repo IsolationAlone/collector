@@ -5,3 +5,8 @@ type SEO = {
   image: string;
   coverImage: string;
 };
+
+type Image = {
+  label: string;
+  url: string;
+};

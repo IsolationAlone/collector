@@ -1,14 +1,17 @@
 "use client";
 
+import { ComboboxDemo } from "@/components/combo-box";
 import Dragndrop from "@/components/drag-n-drop";
+import { ComboboxDropdownMenu } from "@/components/dropdown-combo";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { space_mono } from "@/utils/fonts";
 import { Quotes } from "@prisma/client";
-import { Copy, Trash2 } from "lucide-react";
-import React, { useState } from "react";
+import { Copy } from "lucide-react";
+import React, { useEffect, useState } from "react";
 
 const ItemDetails = ({
   id,
@@ -22,25 +25,48 @@ const ItemDetails = ({
   id: string;
   quote: Quotes[];
   seo: SEO;
+  setSeo: React.Dispatch<React.SetStateAction<SEO>>;
   fetchData: Quotes[];
   setQuote: React.Dispatch<React.SetStateAction<Quotes[]>>;
-  setSeo: React.Dispatch<React.SetStateAction<SEO>>;
   category: string;
 }) => {
   const [search, setSearch] = useState("");
   const [text, setText] = useState<string>("");
-  let images = [];
+  const [images, setImages] = useState<Image[]>([]);
+
+  useEffect(() => {
+    fetch(`/api/getImages/${id}`)
+      .then((res) => res.json())
+      .then((res) => {
+        let imgArray: Image[] = [];
+        res?.map((e: any) => {
+          let img: Image = {
+            label: "",
+            url: "",
+          };
+          img.label = e?.name;
+          img.url = e?.url;
+          imgArray.push(img);
+        });
+        setImages(imgArray);
+      });
+  }, []);
 
   const deleteElement = (element: string) => {
     const index = quote.findIndex((ele) => ele.quote == element);
     setQuote(quote.filter((o, i) => i !== index));
   };
 
-  const Item = ({ quote }: { quote: string; index: number }) => {
+  const Item = ({ oneQuote }: { oneQuote: Quotes; index: number }) => {
     return (
       <span className="border relative rounded-md flex flex-1 gap-1 justify-between pl-3 p-2">
-        <p className="m-2 flex-wrap">{quote}</p>
-        <Button
+        {oneQuote.quoteImage && (
+          <Badge className="absolute -top-2">
+            {oneQuote.quoteImage.split("/").splice(-1)}
+          </Badge>
+        )}
+        <p className="m-2 flex-wrap">{oneQuote.quote}</p>
+        {/* <Button
           onClick={() => {
             deleteElement(quote);
           }}
@@ -48,7 +74,14 @@ const ItemDetails = ({
           variant={"destructive"}
         >
           <Trash2 className="h-4 w-4" />
-        </Button>
+        </Button> */}
+        <ComboboxDropdownMenu
+          images={images}
+          quote={oneQuote.quote}
+          deleteIt={deleteElement}
+          quotes={quote}
+          setQuote={setQuote}
+        />
       </span>
     );
   };
@@ -94,7 +127,23 @@ const ItemDetails = ({
             placeholder="Add Meta Description"
           /> */}
           {/* <Label>Image</Label> */}
-          <Input
+
+          <div className="flex max-md:flex-col gap-2">
+            <ComboboxDemo
+              seo={seo}
+              setSeo={setSeo}
+              images={images}
+              type="image"
+            />
+            <ComboboxDemo
+              seo={seo}
+              setSeo={setSeo}
+              images={images}
+              type="coverImage"
+            />
+          </div>
+
+          {/* <Input
             type="text"
             value={seo.image}
             onChange={(e) => setSeo({ ...seo, image: e.target.value })}
@@ -105,7 +154,7 @@ const ItemDetails = ({
             value={seo.coverImage}
             onChange={(e) => setSeo({ ...seo, coverImage: e.target.value })}
             placeholder="Add Cover Title"
-          />
+          /> */}
 
           <Dragndrop />
 
@@ -126,12 +175,6 @@ const ItemDetails = ({
               onChange={(e) => setText(e.target.value)}
               placeholder="Add Actors"
             />
-            {/* <Textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Add Actors"
-          className="resize-none h-2"
-        /> */}
             <Button
               onClick={() => {
                 setQuote([
@@ -195,8 +238,8 @@ const ItemDetails = ({
                     )
                       return e;
                   })
-                  .map((e, i) => <Item key={i} index={i} quote={e.quote} />)
-              : quote.map((e, i) => <Item key={i} index={i} quote={e.quote} />)}
+                  .map((e, i) => <Item key={i} index={i} oneQuote={e} />)
+              : quote.map((e, i) => <Item key={i} index={i} oneQuote={e} />)}
           </div>
         </TabsContent>
       </Tabs>
