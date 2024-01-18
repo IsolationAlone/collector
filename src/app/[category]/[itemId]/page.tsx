@@ -1,10 +1,8 @@
 import { notFound } from "next/navigation";
 import React, { cache } from "react";
-import ItemDisplay from "./ItemDisplay";
 import { Item } from "@prisma/client";
 import prisma from "@/lib/prismaClient";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import ItemDetails from "./ItemDetails";
 
 type PageProps = {
   params: {

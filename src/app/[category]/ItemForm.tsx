@@ -1,7 +1,6 @@
 "use client";
 
 import { AddItemForm } from "@/components/form-item";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,7 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { nova, space_mono } from "@/utils/fonts";
-import { PencilIcon } from "lucide-react";
 import EditForm from "./EditForm";
 
 const ItemForm = ({ item }: { item: string }) => {

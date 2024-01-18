@@ -1,17 +1,23 @@
 "use client";
 
 import { ComboboxDemo } from "@/components/combo-box";
-import Dragndrop from "@/components/drag-n-drop";
+import { Switch } from "@/components/ui/switch";
 import { ComboboxDropdownMenu } from "@/components/dropdown-combo";
-import { Badge } from "@/components/ui/badge";
+import { Badge, badgeVariants } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { space_mono } from "@/utils/fonts";
-import { Quotes } from "@prisma/client";
+import { Data, Quotes, Seo } from "@prisma/client";
 import { Copy } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import ParagraphModel from "./ParagraphModel";
+import _ from "underscore";
+import updateItemData from "@/action/updateItemData";
+import { toast } from "@/components/ui/use-toast";
+import { Label } from "@/components/ui/label";
+import publishItem from "@/action/publishItem";
 
 const ItemDetails = ({
   id,
@@ -21,18 +27,28 @@ const ItemDetails = ({
   setSeo,
   fetchData,
   category,
+  seoData,
+  pub,
 }: {
   id: string;
+  pub: boolean;
   quote: Quotes[];
-  seo: SEO;
-  setSeo: React.Dispatch<React.SetStateAction<SEO>>;
+  seo: Seo;
+  setSeo: React.Dispatch<React.SetStateAction<Seo>>;
   fetchData: Quotes[];
   setQuote: React.Dispatch<React.SetStateAction<Quotes[]>>;
   category: string;
+  seoData: Data[];
 }) => {
   const [search, setSearch] = useState("");
   const [text, setText] = useState<string>("");
   const [images, setImages] = useState<Image[]>([]);
+
+  const [data, setData] = useState<Data[]>(seoData);
+
+  const [openAddModel, setOpenAddModel] = useState(false);
+
+  const [disable, setDisable] = useState(false);
 
   useEffect(() => {
     fetch(`/api/getImages/${id}`)
@@ -55,6 +71,12 @@ const ItemDetails = ({
   const deleteElement = (element: string) => {
     const index = quote.findIndex((ele) => ele.quote == element);
     setQuote(quote.filter((o, i) => i !== index));
+  };
+
+  const publishIt = async (e: boolean) => {
+    setDisable(true);
+    await publishItem({ itemId: id, publish: e });
+    setDisable(false);
   };
 
   const Item = ({ oneQuote }: { oneQuote: Quotes; index: number }) => {
@@ -106,16 +128,36 @@ const ItemDetails = ({
 
         {/* SEO */}
         <TabsContent className="flex flex-col gap-3 py-4" value="seo">
+          <span className="flex justify-between">
+            <Badge className="w-fit" variant={"secondary"}>
+              Base
+            </Badge>
+            <span className="flex items-center gap-2">
+              <Label>Publish</Label>
+              <Switch
+                disabled={disable}
+                checked={pub}
+                onCheckedChange={publishIt}
+              />
+            </span>
+          </span>
           <Input
             value={seo.title}
             onChange={(e) => setSeo({ ...seo, title: e.target.value })}
             placeholder="Add Title"
           />
-          <Input
-            value={seo.permalink}
-            onChange={(e) => setSeo({ ...seo, permalink: e.target.value })}
-            placeholder="Add Permalink"
-          />
+          <div className="flex max-md:flex-col gap-2">
+            <Input
+              value={seo.permalink}
+              onChange={(e) => setSeo({ ...seo, permalink: e.target.value })}
+              placeholder="Add Permalink"
+            />
+            <Input
+              value={seo.keyword}
+              onChange={(e) => setSeo({ ...seo, keyword: e.target.value })}
+              placeholder="Focused Keyword"
+            />
+          </div>
           <Textarea
             value={seo.description}
             onChange={(e) => setSeo({ ...seo, description: e.target.value })}
@@ -143,22 +185,62 @@ const ItemDetails = ({
             />
           </div>
 
-          {/* <Input
-            type="text"
-            value={seo.image}
-            onChange={(e) => setSeo({ ...seo, image: e.target.value })}
-            placeholder="Add Image"
+          <div className="flex max-md:flex-col gap-2">
+            <Input
+              type="text"
+              value={seo.int}
+              onChange={(e) => setSeo({ ...seo, int: e.target.value })}
+              placeholder="Internal Link"
+            />
+            <Input
+              type="text"
+              value={seo.ext}
+              onChange={(e) => setSeo({ ...seo, ext: e.target.value })}
+              placeholder="External Link"
+            />
+          </div>
+
+          {/* <Dragndrop /> */}
+
+          <div className="flex justify-between">
+            <Badge className="w-fit" variant={"secondary"}>
+              Paragraphs
+            </Badge>
+            <span className="flex gap-2">
+              <Badge
+                onClick={() => setOpenAddModel(true)}
+                className="w-fit cursor-pointer"
+              >
+                Add New
+              </Badge>
+              <Button
+                disabled={_.isEqual(seoData, data) || disable}
+                className={badgeVariants({
+                  variant: "default",
+                  className: "h-auto",
+                })}
+                onClick={async (e) => {
+                  setDisable(true);
+                  await updateItemData({ itemId: id, data });
+                  toast({
+                    title: "Updated Item Data",
+                    description: "SubHeadings and Paragraphs",
+                  });
+                  setDisable(false);
+                }}
+              >
+                Update
+              </Button>
+            </span>
+          </div>
+
+          <ParagraphModel
+            data={data}
+            setData={setData}
+            open={openAddModel}
+            setOpen={setOpenAddModel}
           />
-          <Input
-            type="text"
-            value={seo.coverImage}
-            onChange={(e) => setSeo({ ...seo, coverImage: e.target.value })}
-            placeholder="Add Cover Title"
-          /> */}
-
-          <Dragndrop />
-
-          <Button onClick={() => console.log(seo)}>See</Button>
+          {/* <Button onClick={() => console.log(seo)}>See</Button> */}
         </TabsContent>
 
         {/* Content */}

@@ -29,6 +29,13 @@ model Item {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   seo        Seo?
+  data       Data[]
+  publish    Boolean   @default(false)
+}
+
+type Data {
+  title      String
+  paragraphs String[]
 }
 
 type Seo {
@@ -37,6 +44,9 @@ type Seo {
   permalink   String @default("")
   image       String @default("")
   coverImage  String @default("")
+  ext         String @default("")
+  int         String @default("")
+  keyword     String @default("")
 }
 
 type Quotes {

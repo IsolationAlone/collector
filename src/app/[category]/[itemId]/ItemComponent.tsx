@@ -3,16 +3,19 @@
 import React, { useState } from "react";
 import ItemDisplay from "./ItemDisplay";
 import ItemDetails from "./ItemDetails";
-import { Item } from "@prisma/client";
+import { Item, Seo } from "@prisma/client";
 
 const ItemComponent = ({ item }: { item: Item }) => {
   const [arr, setArr] = useState(item.quotes);
-  const [seo, setSeo] = useState<SEO>({
+  const [seo, setSeo] = useState<Seo>({
     title: item.seo?.title || "",
     description: item.seo?.description || "",
     permalink: item.seo?.permalink || "",
     image: item.seo?.image || "",
     coverImage: item.seo?.coverImage || "",
+    ext: item.seo?.ext || "",
+    int: item.seo?.int || "",
+    keyword: item.seo?.keyword || "",
   });
 
   return (
@@ -40,8 +43,10 @@ const ItemComponent = ({ item }: { item: Item }) => {
         setSeo={setSeo}
         quote={arr}
         setQuote={setArr}
+        pub={item.publish}
         // @ts-ignore
         category={item.Category.name}
+        seoData={item.data}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -13,18 +13,8 @@ import { buttonVariants } from "./ui/button";
 import { space_mono } from "@/utils/fonts";
 import { useDropzone } from "react-dropzone";
 import { ImageDownIcon, XIcon } from "lucide-react";
-import Image from "next/image";
 import { Badge } from "./ui/badge";
-import { Progress } from "@/components/ui/progress";
 import _ from "underscore";
-
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import { ScrollArea } from "./ui/scroll-area";
 
 const Dragndrop = () => {
@@ -37,15 +27,6 @@ const Dragndrop = () => {
         console.log(acceptedFiles);
       },
     });
-
-  // useEffect(() => {
-  //   fetch("/api/getImages")
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       // console.log(data.resources);
-  //       setUploadedFiles(data.resources);
-  //     });
-  // }, []);
 
   return (
     <Dialog>
@@ -74,27 +55,6 @@ const Dragndrop = () => {
             onChange={(e) => console.log(e.target.files)}
           />
         </div>
-        {/* <div className="grid gap-2"> */}
-        {/* <Carousel>
-          <CarouselContent>
-            {_.chunk(uploadedFiles, 5).map((e) => (
-              <CarouselItem className="grid gap-2 h-fit">
-                {e.map((e: File) => (
-                  <div className="flex gap-2 w-full items-center">
-                    <Badge
-                      className="w-[15%] overflow-hidden truncate"
-                      variant={"secondary"}
-                    >
-                      {e.name}
-                    </Badge>
-                  </div>
-                ))}
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel> */}
         <ScrollArea className="h-[100px]">
           <div className="grid grid-cols-2 gap-2">
             {uploadedFiles.toReversed().map((e: File) => {
@@ -112,9 +72,7 @@ const Dragndrop = () => {
                   >
                     <XIcon className="h-4 w-4" />
                   </Badge>
-                  {/* <Progress getValueLabel={(value) => "loading"} value={33} /> */}
                 </div>
-                // <Image src={e.secure_url} alt="image" height={100} width={100} />
               );
             })}
           </div>
