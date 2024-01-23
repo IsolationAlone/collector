@@ -6,38 +6,42 @@ import * as z from "zod";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import updateItem from "@/action/updateItem";
+import updateCategory from "@/action/updateCategory";
+import { Textarea } from "./ui/textarea";
 
 type Props = {
   modelState: React.Dispatch<React.SetStateAction<boolean>>;
   title: string;
+  description: string;
 };
 
 const formSchema = z.object({
   title: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
+  description: z.string().min(30, {
+    message: "Meta Description too short.",
+  }),
 });
 
-export function EditCategoryForm({ modelState, title }: Props) {
+export function EditCategoryForm({ modelState, title, description }: Props) {
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title,
+      description,
     },
   });
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // console.log(values);
     const data = {
-      title: values.title,
+      title: values.title.toLocaleLowerCase(),
+      description: values.description,
     };
     // console.log(data);
-
-    // await new Promise((res) => setTimeout(res, 2000));
-    // await updateItem(data);
+    await updateCategory(data);
     modelState(false);
   }
 
@@ -53,6 +57,27 @@ export function EditCategoryForm({ modelState, title }: Props) {
               {/* <FormLabel>Category's Name</FormLabel> */}
               <FormControl>
                 <Input placeholder="Category's Name" {...field} />
+              </FormControl>
+              {/* <FormDescription>
+                This is your public display name.
+              </FormDescription> */}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          disabled={form.formState.isSubmitting}
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              {/* <FormLabel>Category's Name</FormLabel> */}
+              <FormControl>
+                <Textarea
+                  className="placeholder:text-muted"
+                  placeholder="Category's Meta Description"
+                  {...field}
+                />
               </FormControl>
               {/* <FormDescription>
                 This is your public display name.

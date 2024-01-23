@@ -1,7 +1,4 @@
-"use client";
-
 import { AddItemForm } from "@/components/form-item";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,10 +7,23 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { nova, space_mono } from "@/utils/fonts";
-import { PencilIcon } from "lucide-react";
 import EditForm from "./EditForm";
+import { cache } from "react";
+import prisma from "@/lib/prismaClient";
 
-const ItemForm = ({ item }: { item: string }) => {
+const fetchDescription = cache(async (item: string) => {
+  return await prisma.category.findFirst({
+    where: {
+      name: item,
+    },
+    select: {
+      description: true,
+    },
+  });
+});
+
+const ItemForm = async ({ item }: { item: string }) => {
+  const description = await fetchDescription(item);
   return (
     <Card className="overflow-hidden">
       <CardHeader className="relative flex flex-row items-start justify-between">
@@ -27,7 +37,7 @@ const ItemForm = ({ item }: { item: string }) => {
             Add New {item}
           </CardDescription>
         </section>
-        <EditForm name={item} />
+        <EditForm description={description?.description} name={item} />
       </CardHeader>
       <CardContent className={space_mono.className}>
         <AddItemForm category={item} />

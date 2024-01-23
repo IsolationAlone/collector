@@ -15,6 +15,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "./ui/use-toast";
+import { Textarea } from "./ui/textarea";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -23,6 +24,7 @@ const formSchema = z.object({
   coverImage: z.string().url({
     message: "Not a URL",
   }),
+  description: z.string(),
 });
 
 export function AddCategoryForm({
@@ -69,6 +71,7 @@ export function AddCategoryForm({
     creatCategory({
       name: values.name.toLowerCase(),
       coverImage: values.coverImage,
+      description: values.description,
     });
   }
 
@@ -105,6 +108,27 @@ export function AddCategoryForm({
               <FormLabel>Add Image</FormLabel>
               <FormControl>
                 <Input
+                  className="placeholder:text-muted"
+                  placeholder="Random Image Link"
+                  {...field}
+                />
+              </FormControl>
+              {/* <FormDescription>
+                This is your public display name.
+              </FormDescription> */}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          disabled={isPending}
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Add Description</FormLabel>
+              <FormControl>
+                <Textarea
                   className="placeholder:text-muted"
                   placeholder="Random Image Link"
                   {...field}

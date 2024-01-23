@@ -1,7 +1,7 @@
 "use client";
 
 import { nova, space_mono } from "@/utils/fonts";
-import { Item } from "@prisma/client";
+import { Item, Quotes } from "@prisma/client";
 import Image from "next/image";
 import React, { useState } from "react";
 import { UpdateItemModel } from "./UpdateItemModel";
@@ -54,7 +54,7 @@ const ItemDisplay = ({
               onClick={updateArray}
               disabled={
                 (_.isEqual(seo, fetchedSeo) &&
-                  quotes.toString() === fetchedData.toString()) ||
+                  _.isEqual(quotes, fetchedData)) ||
                 updating
               }
               className={`h-11 px-3 border hover:bg-accent hover:text-accent-foreground transition-colors rounded-full ${

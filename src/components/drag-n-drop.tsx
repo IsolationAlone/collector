@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,8 +12,10 @@ import {
 import { buttonVariants } from "./ui/button";
 import { space_mono } from "@/utils/fonts";
 import { useDropzone } from "react-dropzone";
-import { ImageDownIcon } from "lucide-react";
-import Image from "next/image";
+import { ImageDownIcon, XIcon } from "lucide-react";
+import { Badge } from "./ui/badge";
+import _ from "underscore";
+import { ScrollArea } from "./ui/scroll-area";
 
 const Dragndrop = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -21,26 +23,17 @@ const Dragndrop = () => {
     useDropzone({
       onDrop(acceptedFiles) {
         // @ts-ignore
-        // setUploadedFiles(acceptedFiles);
+        setUploadedFiles([...uploadedFiles, ...acceptedFiles]);
         console.log(acceptedFiles);
       },
     });
-
-  useEffect(() => {
-    fetch("/api/getImages")
-      .then((res) => res.json())
-      .then((data) => {
-        // console.log(data.resources);
-        setUploadedFiles(data.resources);
-      });
-  }, []);
 
   return (
     <Dialog>
       <DialogTrigger className={buttonVariants({ variant: "outline" })}>
         Open
       </DialogTrigger>
-      <DialogContent className={space_mono.className}>
+      <DialogContent className={`${space_mono.className} gap-1`}>
         <DialogHeader>
           <DialogTitle className={space_mono.className}>
             Drag &apos;n&apos; Drop
@@ -62,13 +55,32 @@ const Dragndrop = () => {
             onChange={(e) => console.log(e.target.files)}
           />
         </div>
-        <div className="flex gap-2">
-          {/* {uploadedFiles.map((e) => {
-            return (
-              <Image src={e.secure_url} alt="image" height={100} width={100} />
-            );
-          })} */}
-        </div>
+        <ScrollArea className="h-[100px]">
+          <div className="grid grid-cols-2 gap-2">
+            {uploadedFiles.toReversed().map((e: File) => {
+              return (
+                <div
+                  key={e.name}
+                  className="flex justify-between gap-2 w-full items-center"
+                >
+                  <Badge
+                    className="overflow-hidden truncate"
+                    variant={"secondary"}
+                  >
+                    {e.name}
+                  </Badge>
+                  <Badge
+                    variant={"destructive"}
+                    className="px-2 cursor-pointer"
+                  >
+                    <XIcon className="h-4 w-4" />
+                  </Badge>
+                </div>
+              );
+            })}
+          </div>
+        </ScrollArea>
+        {/* </div> */}
       </DialogContent>
     </Dialog>
   );
