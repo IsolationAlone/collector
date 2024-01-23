@@ -11,12 +11,13 @@ datasource db {
 }
 
 model Category {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  name       String   @unique
-  coverImage String
-  items      Item[]
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String   @unique
+  coverImage  String
+  description String   @default("")
+  items       Item[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Item {
@@ -30,7 +31,19 @@ model Item {
   updatedAt  DateTime  @updatedAt
   seo        Seo?
   data       Data[]
+  faq        Faq[]
   publish    Boolean   @default(false)
+}
+
+type Faq {
+  question String
+  type     Type
+  answer   String[]
+}
+
+enum Type {
+  Single
+  Multiple
 }
 
 type Data {

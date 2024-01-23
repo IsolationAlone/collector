@@ -8,11 +8,12 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const { name, coverImage } = await req.json();
+    const { name, coverImage, description } = await req.json();
     const post = await prisma.category.create({
       data: {
         name,
         coverImage,
+        description,
       },
     });
     return NextResponse.json(post, { status: 201 });

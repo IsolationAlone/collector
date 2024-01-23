@@ -11,10 +11,11 @@ import {
 import React from "react";
 import { PencilIcon } from "lucide-react";
 import { nova, space_mono } from "@/utils/fonts";
-import { EditCategoryForm } from "@/components/edit-category";
+// import { EditCategoryForm } from "@/components/edit-category";
 import { Category } from "@prisma/client";
+import { EditCategoryForm } from "@/components/edit-category";
 
-const EditForm = ({ name: title }: Partial<Category>) => {
+const EditForm = ({ name: title, description }: Partial<Category>) => {
   const [model, setModel] = React.useState(false);
   return (
     <Dialog open={model} onOpenChange={setModel}>
@@ -29,7 +30,11 @@ const EditForm = ({ name: title }: Partial<Category>) => {
           <DialogDescription
             className={`${space_mono.className} font-bold text-muted-foreground`}
           >
-            <EditCategoryForm title={title!} modelState={setModel} />
+            <EditCategoryForm
+              title={title!}
+              description={description!}
+              modelState={setModel}
+            />
           </DialogDescription>
         </DialogHeader>
       </DialogContent>

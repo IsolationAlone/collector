@@ -59,7 +59,10 @@ const Dragndrop = () => {
           <div className="grid grid-cols-2 gap-2">
             {uploadedFiles.toReversed().map((e: File) => {
               return (
-                <div className="flex justify-between gap-2 w-full items-center">
+                <div
+                  key={e.name}
+                  className="flex justify-between gap-2 w-full items-center"
+                >
                   <Badge
                     className="overflow-hidden truncate"
                     variant={"secondary"}

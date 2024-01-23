@@ -40,13 +40,22 @@ const DialogBox = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
+        onClick={() => {
+          setTemp({ title, paragraphs });
+        }}
         className={buttonVariants({
           variant: "ghost",
           className:
             "flex w-full items-center justify-between group truncate rounded-none",
         })}
       >
-        <p className="flex-1 text-start">{title}</p>
+        <p
+          className={`flex-1 text-start ${
+            !title ? "text-muted-foreground" : null
+          }`}
+        >
+          {title || "[No title looks like introduction]"}
+        </p>
         <Settings2 className="shrink-0 w-4 h-4 text-muted group-hover:text-muted-foreground" />
       </DialogTrigger>
       <DialogContent className={`${space_mono.className} gap-4`}>
@@ -125,11 +134,10 @@ const DialogBox = ({
           )}
           <span className="flex gap-2">
             <Button
-              disabled={!temp.title || !temp.paragraphs.length}
+              disabled={!temp.paragraphs.length}
               className="flex-1"
               onClick={() => {
                 setData(data.map((e, i) => (i === index ? temp : e)));
-                console.log(temp);
                 // setTemp({
                 //   title: "",
                 //   paragraphs: [],
@@ -251,7 +259,7 @@ const AddNewSection = ({
             )}
             <span className="flex gap-2">
               <Button
-                disabled={!temp.title || !temp.paragraphs.length}
+                disabled={!temp.paragraphs.length}
                 className="flex-1"
                 onClick={() => {
                   setData([...data, temp]);

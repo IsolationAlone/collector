@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { space_mono } from "@/utils/fonts";
 import { Data, Quotes, Seo } from "@prisma/client";
-import { Copy } from "lucide-react";
+import { Copy, Grid } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import ParagraphModel from "./ParagraphModel";
 import _ from "underscore";
@@ -18,6 +18,12 @@ import updateItemData from "@/action/updateItemData";
 import { toast } from "@/components/ui/use-toast";
 import { Label } from "@/components/ui/label";
 import publishItem from "@/action/publishItem";
+import {
+  DragDropContext,
+  Draggable,
+  DropResult,
+  Droppable,
+} from "react-beautiful-dnd";
 
 const ItemDetails = ({
   id,
@@ -79,34 +85,137 @@ const ItemDetails = ({
     setDisable(false);
   };
 
-  const Item = ({ oneQuote }: { oneQuote: Quotes; index: number }) => {
-    return (
-      <span className="border relative rounded-md flex flex-1 gap-1 justify-between pl-3 p-2">
-        {oneQuote.quoteImage && (
-          <Badge className="absolute -top-2">
-            {oneQuote.quoteImage.split("/").splice(-1)}
-          </Badge>
-        )}
-        <p className="m-2 flex-wrap">{oneQuote.quote}</p>
-        {/* <Button
-          onClick={() => {
-            deleteElement(quote);
-          }}
-          className="px-3"
-          variant={"destructive"}
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button> */}
-        <ComboboxDropdownMenu
-          images={images}
-          quote={oneQuote.quote}
-          deleteIt={deleteElement}
-          quotes={quote}
-          setQuote={setQuote}
-        />
-      </span>
+  const Item = ({
+    oneQuote,
+    type,
+    index,
+  }: {
+    oneQuote: Quotes;
+    index: number;
+    type: "Drag" | "NoDrag";
+  }) => {
+    if (type === "NoDrag")
+      return (
+        <span className="border relative rounded-md flex flex-1 gap-1 justify-between pl-3 p-2">
+          {oneQuote.quoteImage && (
+            <Badge className="absolute -top-2">
+              {oneQuote.quoteImage.split("/").splice(-1)}
+            </Badge>
+          )}
+          <p className="m-2 flex-wrap">{oneQuote.quote}</p>
+          <ComboboxDropdownMenu
+            images={images}
+            quote={oneQuote.quote}
+            deleteIt={deleteElement}
+            quotes={quote}
+            setQuote={setQuote}
+          />
+        </span>
+      );
+
+    if (type === "Drag")
+      return (
+        <Draggable key={index} draggableId={index.toString()} index={index}>
+          {(provided, snapshot) => (
+            <div
+              ref={provided.innerRef}
+              {...provided.draggableProps}
+              className={`border relative rounded-md flex flex-1 gap-1 justify-between pl-3 p-2 transition-all duration-200`}
+            >
+              {oneQuote.quoteImage && (
+                <Badge className="absolute -top-2">
+                  {oneQuote.quoteImage.split("/").splice(-1)}
+                </Badge>
+              )}
+              <div
+                {...provided.dragHandleProps}
+                className={`${
+                  snapshot.isDragging ? "bg-slate-200/40" : null
+                } rounded-full border p-1 absolute -left-3 top-1/4 transition-transform duration-200 hover:scale-125 active:scale-110`}
+              >
+                <Grid className="h-4 w-4" />
+              </div>
+              <p className="m-2 flex-wrap">{oneQuote.quote}</p>
+              <ComboboxDropdownMenu
+                images={images}
+                quote={oneQuote.quote}
+                deleteIt={deleteElement}
+                quotes={quote}
+                setQuote={setQuote}
+              />
+            </div>
+          )}
+        </Draggable>
+      );
+  };
+
+  const onDragEnd = (result: DropResult) => {
+    const { source, destination } = result;
+
+    if (!destination) return;
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    )
+      return;
+
+    let add,
+      arr = quote;
+
+    if (destination.droppableId) {
+      add = arr[source.index];
+      arr.splice(source.index, 1);
+      arr.splice(destination.index, 0, add);
+      setQuote(arr);
+    }
+  };
+
+  const countWords = (data: Data[]) => {
+    return data.reduce(
+      (acc, val) =>
+        acc +
+        val.title.split(" ").length +
+        val.paragraphs.reduce((acc2, val2) => acc2 + val2.split(" ").length, 0),
+      0
     );
   };
+
+  function countWordRepetitions(text: string, wordGroup: string) {
+    // Escape special characters in the wordGroup to create a valid regex
+    const escapedWordGroup = wordGroup.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+    // Create a regular expression to match the wordGroup globally
+    const regex = new RegExp(escapedWordGroup, "g");
+
+    // Use match to find all occurrences of the wordGroup
+    const matches = text.match(regex);
+
+    // Return the count of matches (or 0 if there are no matches)
+    return matches ? matches.length : 0;
+  }
+
+  const kd = (keyword: string) => {
+    let c = 0;
+    data.map((e) => {
+      c += countWordRepetitions(
+        e.title.toLocaleLowerCase(),
+        keyword.toLocaleLowerCase()
+      );
+      e.paragraphs.map((e) => {
+        c += countWordRepetitions(
+          e.toLocaleLowerCase(),
+          keyword.toLocaleLowerCase()
+        );
+      });
+    });
+    return c;
+  };
+
+  const [wordCount, keywordDensity] = [
+    countWords(data),
+    ((kd(seo.keyword) / countWords(data)) * 100).toFixed(2),
+  ];
 
   return (
     <div className={`${space_mono.className} w-full `}>
@@ -148,8 +257,25 @@ const ItemDetails = ({
           />
           <div className="flex max-md:flex-col gap-2">
             <Input
+              onBlur={() =>
+                setSeo({
+                  ...seo,
+                  permalink: seo.permalink
+                    .toLocaleLowerCase()
+                    .split(" ")
+                    .join("-"),
+                })
+              }
               value={seo.permalink}
-              onChange={(e) => setSeo({ ...seo, permalink: e.target.value })}
+              onChange={(e) =>
+                setSeo({
+                  ...seo,
+                  permalink:
+                    e.target.value.length < 75
+                      ? e.target.value
+                      : e.target.value.substring(0, 75),
+                })
+              }
               placeholder="Add Permalink"
             />
             <Input
@@ -160,7 +286,15 @@ const ItemDetails = ({
           </div>
           <Textarea
             value={seo.description}
-            onChange={(e) => setSeo({ ...seo, description: e.target.value })}
+            onChange={(e) =>
+              setSeo({
+                ...seo,
+                description:
+                  e.target.value.length < 75
+                    ? e.target.value
+                    : e.target.value.substring(0, 155),
+              })
+            }
             placeholder="Add Meta Description"
           />
           {/* <Input
@@ -203,9 +337,19 @@ const ItemDetails = ({
           {/* <Dragndrop /> */}
 
           <div className="flex justify-between">
-            <Badge className="w-fit" variant={"secondary"}>
-              Paragraphs
-            </Badge>
+            <section className="flex gap-2">
+              <Badge className="w-fit" variant={"secondary"}>
+                Paragraphs
+              </Badge>
+              <div className="flex gap-1 max-lg:flex-col max-lg:text-xs">
+                <span className="text-muted-foreground">
+                  [{wordCount}]words
+                </span>
+                <span className="text-muted-foreground">
+                  [{keywordDensity}]KD
+                </span>
+              </div>
+            </section>
             <span className="flex gap-2">
               <Badge
                 onClick={() => setOpenAddModel(true)}
@@ -309,20 +453,35 @@ const ItemDetails = ({
             </Button>
           </span>
           {/* Quotes */}
-          <div className="grid gap-2">
-            {search
-              ? quote
-                  .filter((e, i) => {
-                    if (
-                      e.quote
-                        .toLocaleLowerCase()
-                        .includes(search.toLocaleLowerCase())
-                    )
-                      return e;
-                  })
-                  .map((e, i) => <Item key={i} index={i} oneQuote={e} />)
-              : quote.map((e, i) => <Item key={i} index={i} oneQuote={e} />)}
-          </div>
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="container">
+              {(provided) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className="grid gap-2"
+                >
+                  {search
+                    ? quote
+                        .filter((e, i) => {
+                          if (
+                            e.quote
+                              .toLocaleLowerCase()
+                              .includes(search.toLocaleLowerCase())
+                          )
+                            return e;
+                        })
+                        .map((e, i) => (
+                          <Item type="NoDrag" key={i} index={i} oneQuote={e} />
+                        ))
+                    : quote.map((e, i) => (
+                        <Item type="Drag" key={i} index={i} oneQuote={e} />
+                      ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
         </TabsContent>
       </Tabs>
     </div>

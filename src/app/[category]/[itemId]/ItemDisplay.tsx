@@ -1,7 +1,7 @@
 "use client";
 
 import { nova, space_mono } from "@/utils/fonts";
-import { Item } from "@prisma/client";
+import { Item, Quotes } from "@prisma/client";
 import Image from "next/image";
 import React, { useState } from "react";
 import { UpdateItemModel } from "./UpdateItemModel";

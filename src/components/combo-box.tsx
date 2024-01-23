@@ -18,6 +18,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { space_mono } from "@/utils/fonts";
+import { Seo } from "@prisma/client";
 
 export function ComboboxDemo({
   type,
@@ -27,8 +28,8 @@ export function ComboboxDemo({
 }: {
   type: "image" | "coverImage";
   images: Image[];
-  seo: SEO;
-  setSeo: React.Dispatch<React.SetStateAction<SEO>>;
+  seo: Seo;
+  setSeo: React.Dispatch<React.SetStateAction<Seo>>;
 }) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(
