@@ -46,7 +46,8 @@ const ItemComponent = ({ item }: { item: Item }) => {
         pub={item.publish}
         // @ts-ignore
         category={item.Category.name}
-        seoData={item.data}
+        Data={item.data}
+        Faq={item.faq}
       />
     </div>
   );

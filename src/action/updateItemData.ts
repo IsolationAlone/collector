@@ -4,7 +4,7 @@ import prisma from "@/lib/prismaClient";
 import { revalidatePath } from "next/cache";
 
 async function updateItemData(formData: any) {
-    const { itemId, data } = formData;
+    const { itemId, data, faq } = formData;
     // console.log(data);
 
     await prisma.item.update({
@@ -12,7 +12,8 @@ async function updateItemData(formData: any) {
             id: itemId,
         },
         data: {
-            data
+            data,
+            faq
         },
     });
 
