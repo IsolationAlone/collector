@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { space_mono } from "@/utils/fonts";
-import { Data, Quotes, Seo } from "@prisma/client";
+import { Data, Faq, Quotes, Seo } from "@prisma/client";
 import { Copy, Grid } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import ParagraphModel from "./ParagraphModel";
@@ -24,6 +24,7 @@ import {
   DropResult,
   Droppable,
 } from "react-beautiful-dnd";
+import FaqModel from "./FaqModel";
 
 const ItemDetails = ({
   id,
@@ -33,8 +34,9 @@ const ItemDetails = ({
   setSeo,
   fetchData,
   category,
-  seoData,
+  Data,
   pub,
+  Faq,
 }: {
   id: string;
   pub: boolean;
@@ -44,15 +46,18 @@ const ItemDetails = ({
   fetchData: Quotes[];
   setQuote: React.Dispatch<React.SetStateAction<Quotes[]>>;
   category: string;
-  seoData: Data[];
+  Data: Data[];
+  Faq: Faq[];
 }) => {
   const [search, setSearch] = useState("");
   const [text, setText] = useState<string>("");
   const [images, setImages] = useState<Image[]>([]);
 
-  const [data, setData] = useState<Data[]>(seoData);
-
+  const [data, setData] = useState<Data[]>(Data);
   const [openAddModel, setOpenAddModel] = useState(false);
+
+  const [faq, setFaq] = useState<Faq[]>(Faq);
+  const [openFaqModel, setOpenFaqModel] = useState(false);
 
   const [disable, setDisable] = useState(false);
 
@@ -358,17 +363,19 @@ const ItemDetails = ({
                 Add New
               </Badge>
               <Button
-                disabled={_.isEqual(seoData, data) || disable}
+                disabled={
+                  (_.isEqual(Data, data) && _.isEqual(Faq, faq)) || disable
+                }
                 className={badgeVariants({
                   variant: "default",
                   className: "h-auto",
                 })}
                 onClick={async (e) => {
                   setDisable(true);
-                  await updateItemData({ itemId: id, data });
+                  await updateItemData({ itemId: id, data, faq });
                   toast({
                     title: "Updated Item Data",
-                    description: "SubHeadings and Paragraphs",
+                    description: "SubHeadings, Paragraphs, & FAQs",
                   });
                   setDisable(false);
                 }}
@@ -384,7 +391,29 @@ const ItemDetails = ({
             open={openAddModel}
             setOpen={setOpenAddModel}
           />
-          {/* <Button onClick={() => console.log(seo)}>See</Button> */}
+
+          <div className="flex justify-between">
+            <section className="flex gap-2">
+              <Badge className="w-fit" variant={"secondary"}>
+                FAQs
+              </Badge>
+            </section>
+            <span className="flex gap-2">
+              <Badge
+                onClick={() => setOpenFaqModel(true)}
+                className="w-fit cursor-pointer"
+              >
+                Add New
+              </Badge>
+            </span>
+          </div>
+
+          <FaqModel
+            open={openFaqModel}
+            setOpen={setOpenFaqModel}
+            data={faq}
+            setData={setFaq}
+          />
         </TabsContent>
 
         {/* Content */}

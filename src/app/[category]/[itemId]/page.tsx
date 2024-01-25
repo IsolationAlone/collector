@@ -3,12 +3,19 @@ import React, { cache } from "react";
 import { Item } from "@prisma/client";
 import prisma from "@/lib/prismaClient";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { Metadata, ResolvingMetadata } from "next";
+import ItemComponent from "./ItemComponent";
 
 type PageProps = {
   params: {
     category: string;
     itemId: string;
   };
+};
+
+type Props = {
+  params: { category: string; itemId: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 };
 
 const fetchItem = cache(
@@ -35,14 +42,6 @@ const fetchItem = cache(
     }
   }
 );
-
-import { Metadata, ResolvingMetadata } from "next";
-import ItemComponent from "./ItemComponent";
-
-type Props = {
-  params: { category: string; itemId: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-};
 
 export async function generateMetadata(
   { params, searchParams }: Props,
